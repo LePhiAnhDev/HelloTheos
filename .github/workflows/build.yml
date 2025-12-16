@@ -1,4 +1,4 @@
-name: Build My iOS Tweak
+name: Build My iOS App
 
 on:
   push:
@@ -17,10 +17,10 @@ jobs:
   build:
     uses: LePhiAnhDev/ci-ios-theos/.github/workflows/ios-theos-build.yml@main
     with:
-      schemes: '["default","rootless","roothide"]'
+      schemes: '["default"]'
       sdk_version: '16.5'
-      theos_repo: official
+      theos_repo: 'official'
       upload_release: ${{ github.event_name == 'release' }}
       artifact_retention_days: 30
-      fail_fast: false
-      max_parallel: 2
+      fail_fast: true
+      max_parallel: 1
