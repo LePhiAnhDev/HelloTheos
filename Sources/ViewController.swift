@@ -34,7 +34,7 @@ class ViewController: UIViewController {
     
     private lazy var tapButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Tap Me!", size: .large)
+        button.setTitle("Tap Me!", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
@@ -46,7 +46,7 @@ class ViewController: UIViewController {
     
     private lazy var resetButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Reset", size: .large)
+        button.setTitle("Reset", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         button.backgroundColor = .systemRed
         button.setTitleColor(.white, for: .normal)

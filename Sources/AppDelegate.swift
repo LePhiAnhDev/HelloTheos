@@ -30,6 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @available(iOS 13.0, *)
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set) {
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
     }
 }
