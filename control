@@ -1,9 +1,9 @@
-Package: com.yourname.hellotheos
-Name: HelloTheos
+Package: com.yourname.myapp
+Name: My App
 Version: 1.0.0
 Architecture: iphoneos-arm64
-Description: A simple Swift iOS app built with Theos
-Maintainer: Your Name <your@email.com>
+Description: App description
+Maintainer: Your Name <email@example.com>
 Author: Your Name
 Section: Applications
 Depends: firmware (>= 14.0)
