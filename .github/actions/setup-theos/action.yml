@@ -1,0 +1,39 @@
+name: Setup Theos Environment
+description: Setup Theos + ldid + iOS SDK with cache
+
+inputs:
+  sdk_version:
+    required: true
+    default: "16.5"
+
+runs:
+  using: composite
+  steps:
+    - name: Install base dependencies
+      shell: bash
+      run: |
+        brew install ldid-procursus make
+
+    - name: Restore Theos cache
+      uses: actions/cache@v4
+      with:
+        path: theos
+        key: theos-${{ runner.os }}-${{ inputs.sdk_version }}
+
+    - name: Setup Theos
+      shell: bash
+      run: |
+        if [ ! -d "theos" ]; then
+          git clone --recursive https://github.com/theos/theos.git theos
+        fi
+        echo "THEOS=$PWD/theos" >> $GITHUB_ENV
+
+    - name: Install iOS SDK
+      shell: bash
+      run: |
+        if [ ! -d "theos/sdks/iPhoneOS${{ inputs.sdk_version }}.sdk" ]; then
+          curl -LO https://github.com/theos/sdks/archive/master.zip
+          unzip master.zip
+          mv sdks-master/iPhoneOS${{ inputs.sdk_version }}.sdk theos/sdks/
+          rm -rf sdks-master master.zip
+        fi

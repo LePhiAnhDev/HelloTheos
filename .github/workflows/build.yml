@@ -1,0 +1,140 @@
+name: Build iOS App
+
+on:
+  push:
+    branches: [main, master, develop]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 60
+
+    strategy:
+      fail-fast: false
+      matrix:
+        scheme: [default]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Theos Environment
+        uses: ./.github/actions/setup-theos
+        with:
+          sdk_version: "16.5"
+
+      - name: Build App (${{ matrix.scheme }})
+        run: |
+          set -e
+          export PATH="/opt/homebrew/bin:$PATH"
+          
+          # Load custom scheme if exists
+          if [ -f "devkit/${{ matrix.scheme }}.sh" ]; then
+            source devkit/${{ matrix.scheme }}.sh
+          fi
+          
+          # Clean and build
+          gmake clean
+          FINALPACKAGE=1 gmake package
+          
+          # List generated packages
+          echo "📦 Generated packages:"
+          ls -lh packages/ || echo "No packages directory found"
+
+      - name: Collect artifacts
+        run: |
+          mkdir -p artifacts/${{ matrix.scheme }}
+          
+          # Copy DEB packages
+          if [ -d "packages" ]; then
+            cp -v packages/*.deb artifacts/${{ matrix.scheme }}/ 2>/dev/null || true
+          fi
+          
+          # Extract IPA if exists
+          if [ -f "packages/"*.deb ]; then
+            cd artifacts/${{ matrix.scheme }}
+            for deb in ../../packages/*.deb; do
+              echo "📱 Extracting IPA from $deb"
+              ar x "$deb"
+              tar -xzf data.tar.* 2>/dev/null || tar -xJf data.tar.* 2>/dev/null || true
+              
+              # Find the app bundle
+              if [ -d "Applications/HelloTheos.app" ]; then
+                # Create Payload directory for IPA
+                mkdir -p Payload
+                cp -r Applications/HelloTheos.app Payload/
+                
+                # Create IPA
+                zip -r HelloTheos-${{ matrix.scheme }}.ipa Payload
+                echo "✅ Created IPA: HelloTheos-${{ matrix.scheme }}.ipa"
+                
+                # Cleanup
+                rm -rf Applications Payload data.tar.* control.tar.* debian-binary
+              fi
+            done
+            cd ../..
+          fi
+          
+          echo "📦 Artifacts collected:"
+          ls -lah artifacts/${{ matrix.scheme }}/
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.scheme }}
+          path: artifacts/${{ matrix.scheme }}
+          if-no-files-found: warn
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: macos-14
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-packages
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          find release-packages -type f \( -name "*.deb" -o -name "*.ipa" \) -exec cp {} release-assets/ \;
+          echo "📦 Release assets:"
+          ls -lah release-assets/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release-assets/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          body: |
+            ## 🚀 HelloTheos App Release
+            
+            ### 📱 Installation
+            
+            **DEB Package (Jailbroken devices):**
+            1. Download the `.deb` file
+            2. Install using your package manager (Sileo, Cydia, Zebra)
+            
+            **IPA File (Sideloading):**
+            1. Download the `.ipa` file
+            2. Install using AltStore, Sideloadly, or similar tools
+            
+            ### 📋 What's Included
+            - ✅ Built with Theos
+            - ✅ Swift 5 support
+            - ✅ iOS 14.0+ compatible
+            - ✅ ARM64/ARM64e architectures
+            
+            ### 🐛 Issues?
+            Please report any issues on GitHub!

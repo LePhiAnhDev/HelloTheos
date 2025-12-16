@@ -1,0 +1,55 @@
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+
+	CFBundleDevelopmentRegion
+	en
+	CFBundleExecutable
+	HelloTheos
+	CFBundleIdentifier
+	com.yourname.hellotheos
+	CFBundleInfoDictionaryVersion
+	6.0
+	CFBundleName
+	HelloTheos
+	CFBundlePackageType
+	APPL
+	CFBundleShortVersionString
+	1.0
+	CFBundleVersion
+	1
+	LSRequiresIPhoneOS
+	
+	UIApplicationSceneManifest
+	
+		UIApplicationSupportsMultipleScenes
+		
+		UISceneConfigurations
+		
+			UIWindowSceneSessionRoleApplication
+			
+				
+					UISceneConfigurationName
+					Default Configuration
+					UISceneDelegateClassName
+					HelloTheos.SceneDelegate
+				
+			
+		
+	
+	UILaunchStoryboardName
+	LaunchScreen
+	UISupportedInterfaceOrientations
+	
+		UIInterfaceOrientationPortrait
+		UIInterfaceOrientationLandscapeLeft
+		UIInterfaceOrientationLandscapeRight
+	
+	UISupportedInterfaceOrientations~ipad
+	
+		UIInterfaceOrientationPortrait
+		UIInterfaceOrientationPortraitUpsideDown
+		UIInterfaceOrientationLandscapeLeft
+		UIInterfaceOrientationLandscapeRight
+	
+	MinimumOSVersion
+	14.0
