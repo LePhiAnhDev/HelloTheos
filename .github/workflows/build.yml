@@ -1,5 +1,4 @@
 name: Build
-
 on:
   push:
     branches: [main, develop]
@@ -16,7 +15,7 @@ jobs:
   build:
     uses: LePhiAnhDev/ci-ios-theos/.github/workflows/ios-theos-build.yml@main
     with:
-      sdk_version: '16.5'
-      theos_repo: 'official'
+      sdk_version: '16.5'           # iOS SDK version
+      theos_repo: 'official'        # 'official' hoặc 'roothide'
       upload_release: ${{ github.event_name == 'release' }}
-      artifact_retention_days: 30
+      artifact_retention_days: 30   # 1-90 ngày
