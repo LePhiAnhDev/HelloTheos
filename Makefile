@@ -4,7 +4,6 @@ TARGET = iphone:clang:16.5:14.0
 include $(THEOS)/makefiles/common.mk
 
 APPLICATION_NAME = MyApp
-
 MyApp_FILES = $(wildcard Sources/*.swift)
 MyApp_FRAMEWORKS = UIKit
 MyApp_SWIFTFLAGS = -swift-version 5
