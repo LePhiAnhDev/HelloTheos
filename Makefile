@@ -17,3 +17,9 @@ after-stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app$(ECHO_END)
 	$(ECHO_NOTHING)cp -r Resources/* $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/$(ECHO_END)
 	$(ECHO_NOTHING)chmod +x $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app/$(APPLICATION_NAME)$(ECHO_END)
+
+after-package::
+	$(ECHO_NOTHING)mkdir -p $(THEOS_PROJECT_DIR)/.tmp/Payload$(ECHO_END)
+	$(ECHO_NOTHING)cp -r $(THEOS_STAGING_DIR)/Applications/$(APPLICATION_NAME).app $(THEOS_PROJECT_DIR)/.tmp/Payload/$(ECHO_END)
+	$(ECHO_NOTHING)cd $(THEOS_PROJECT_DIR)/.tmp && zip -qr $(THEOS_PROJECT_DIR)/packages/$(APPLICATION_NAME)_$(THEOS_PACKAGE_BASE_VERSION).ipa Payload$(ECHO_END)
+	$(ECHO_NOTHING)rm -rf $(THEOS_PROJECT_DIR)/.tmp$(ECHO_END)

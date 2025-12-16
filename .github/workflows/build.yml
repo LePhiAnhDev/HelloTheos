@@ -1,4 +1,4 @@
-name: Build My iOS App
+name: Build
 
 on:
   push:
@@ -11,13 +11,11 @@ on:
 permissions:
   contents: write
   actions: read
-  packages: read
 
 jobs:
   build:
     uses: LePhiAnhDev/ci-ios-theos/.github/workflows/ios-theos-build.yml@main
     with:
-      project_type: 'application'  # ← MỚI: Chỉ rõ loại project
       sdk_version: '16.5'
       theos_repo: 'official'
       upload_release: ${{ github.event_name == 'release' }}
